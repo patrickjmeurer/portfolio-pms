@@ -8,55 +8,60 @@ Accepted
 The PMS consists of:
 - one backend API
 - two frontend applications (public and admin)
+- shared domain modules and contracts
 
-All applications:
+All components:
 - are written in TypeScript
-- share API contracts
+- share explicit API contracts
 - evolve together
 - are maintained by a single engineer
 
-Key concerns:
-- avoiding duplication of contracts and types
-- keeping frontend and backend changes in sync
-- making architectural boundaries explicit
+Key concerns include:
+- avoiding duplication of contracts and domain models
+- keeping frontend and backend changes synchronized
+- making architectural boundaries explicit and reviewable
 
 ---
 
 ## Decision
 
-We will use a **monorepo** to host all applications and shared libraries.
+The project will use a **monorepo** to host all applications and shared packages.
 
 The monorepo will contain:
-- application-level code (apps)
-- shared libraries for domains, contracts, and infrastructure concerns
+- application-level code (API, public web, admin web)
+- domain modules
+- shared contract definitions
+- infrastructure adapters
 
-Nx will be used to:
-- enforce dependency boundaries
-- enable clear separation between domains and layers
-- support long-term maintainability
+The monorepo relies on:
+- explicit architectural documentation (ADRs)
+- clear package boundaries
+- conventions enforced by code review
+
+**Turborepo** is used strictly for task orchestration and caching.
+It does not enforce architectural boundaries or influence design decisions.
 
 ---
 
 ## Consequences
 
 ### Positive
-- Shared API contracts between frontend and backend
+- Single source of truth for contracts and domain logic
 - Easier refactoring across applications
-- Clear visibility of domain boundaries
-- Single source of truth for types and schemas
+- Clear visibility of system boundaries
+- Reduced risk of model drift between frontend and backend
 
 ### Negative
-- Increased initial complexity
-- Requires discipline to avoid creating a “shared junk drawer”
-- Tooling overhead compared to simple repos
+- Higher initial setup complexity
+- Requires discipline to avoid inappropriate coupling
+- Architectural violations are prevented by process, not tooling
 
 ---
 
 ## Notes
 
-The monorepo choice is justified by:
-- single ownership
-- tight coupling between applications
-- architectural clarity over repository isolation
+This decision favors architectural clarity and long-term maintainability
+over repository isolation.
 
-If the system grows significantly or ownership changes, this decision may be revisited.
+If ownership becomes distributed or the system grows significantly,
+this decision may be revisited.
